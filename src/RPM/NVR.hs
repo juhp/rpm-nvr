@@ -13,18 +13,29 @@
 -- the Free Software Foundation, either version 2 of the License, or
 -- (at your option) any later version.
 
+-- Todo: support RPM epochs (ENVR)
+
 module RPM.NVR where
 
 import Data.List (elemIndices, tails)
 
 data NVR = NVR {name :: String,
-                version :: String,
-                release :: String}
-         deriving (Eq)
+                verrel :: VerRel}
 
-instance Ord NVR where
-  compare (NVR n1 v1 r1) (NVR n2 v2 r2) =
-    if n1 == n2 then compareVR (v1,r1) (v2,r2) else compare n1 n2
+data VerRel = VerRel {version :: String,
+                      release :: String}
+  deriving (Eq)
+
+-- verrel :: VerRel -> String
+-- verrel vr = version vr ++ "-" ++ release nvr
+
+instance Eq NVR where
+  (NVR n1 vr1) == (NVR n2 vr2) =
+    n1 == n2 && vr1 == vr2
+
+instance Ord VerRel where
+  compare (VerRel v1 r1) (VerRel v2 r2) =
+    compareVR (v1,r1) (v2,r2)
 
 compareVR (v1,r1) (v2,r2) =
   if v1 == v2
@@ -38,8 +49,11 @@ compareVer v1 v2 =
     verList v = let (m1, rest) = break (== '.') v in
       read m1 : if null rest then [] else verList (tail rest)
 
+instance Show VerRel where
+  show (VerRel ver rel) = ver ++ "-" ++ rel
+
 instance Show NVR where
-  show (NVR nm ver rel) = nm ++ "-" ++ ver ++ "-" ++ rel
+  show (NVR nm verrel) = nm ++ "-" ++ show verrel
 
 instance Read NVR where
   readsPrec _ = readsNVR
@@ -47,8 +61,17 @@ instance Read NVR where
 readsNVR :: ReadS NVR
 readsNVR s =
   if length (elemIndices '-' s) < 2
-    then error $ "readsNVR: malformed NVR string " ++ s
-    else [(NVR (reverse eman) (reverse rev) (reverse ler), "")]
+    then error $ "readsNVR: malformed NVR string: '" ++ s ++ "'"
+    else [(NVR (reverse eman) (VerRel (reverse rev) (reverse ler)), "")]
   where
     (ler, '-':tser) = break (== '-') $ reverse s
     (rev, '-':eman) = break (== '-') tser
+
+appendRelease :: NVR -> String -> NVR
+appendRelease (NVR n vr) d =
+  let rel = release vr in
+  NVR n vr { release = rel ++ d}
+
+eqNV :: NVR -> NVR -> Bool
+eqNV (NVR n1 vr1) (NVR n2 vr2) =
+  (n1 == n2 ) && (vr1 == vr2)
