@@ -1,2 +1,5 @@
 # haskell-rpm
-rpm version and spec file library
+
+Currently this library provides some types for RPM NVRs
+(it can read, write and compare NVRs).
+It can also read spec files into sections.

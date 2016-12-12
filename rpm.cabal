@@ -12,8 +12,8 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     RPM.NV,
-                       RPM.NVR
-  build-depends:       base >=4.7 && <4.8
+  exposed-modules:     RPM.NVR,
+                       RPM.Spec
+  build-depends:       base
   hs-source-dirs:      src
   default-language:    Haskell2010
