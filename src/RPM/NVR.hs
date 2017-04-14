@@ -60,10 +60,12 @@ instance Read NVR where
 
 readsNVR :: ReadS NVR
 readsNVR s =
-  if length (elemIndices '-' s) < 2
+  if length dashes < 2
     then error $ "readsNVR: malformed NVR string: '" ++ s ++ "'"
     else [(NVR (reverse eman) (VerRel (reverse rev) (reverse ler)), "")]
   where
+    dashes = elemIndices '-' s
+
     (ler, '-':tser) = break (== '-') $ reverse s
     (rev, '-':eman) = break (== '-') tser
 
