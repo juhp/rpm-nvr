@@ -65,3 +65,6 @@ section acc (l:ls) =
     else section (acc ++ [l]) ls
     where
       sectionHead = ["Name:", "%description", "%package", "%prep", "%build", "%install", "%post", "%files", "%changelog"]
+
+showSpec :: [[String]] -> String
+showSpec = unlines . concat
