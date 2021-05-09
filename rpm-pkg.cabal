@@ -28,6 +28,7 @@ library
   exposed-modules:     Data.RPM.NVR
                        Data.RPM.Package
                        Data.RPM.Spec
+  other-modules:       Data.RPM.VerCmp
   hs-source-dirs:      src
 
   ghc-options:         -Wall
