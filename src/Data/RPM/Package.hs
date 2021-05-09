@@ -11,6 +11,7 @@ module Data.RPM.Package (
   showRpmPkg,
   dropRpmArch,
   showPkgIdent,
+  showPkgVerRel,
   archSuffix
   )
 where
@@ -22,33 +23,16 @@ import Data.Monoid ((<>))
 #endif
 import Data.RPM.NVR
 
+-- FIXME: add epoch type
 -- | RPM package with name, version-release, and maybe architecture
 data RpmPackage = RpmPkg {rpmName :: String,
                           rpmVerRel :: VersionRelease,
                           rpmMArch :: Maybe String}
   deriving (Eq, Ord)
 
--- | Show the version-release of an RpmPackage
-showPkgVerRel :: RpmPackage -> String
-showPkgVerRel = txtVerRel . rpmVerRel
-  where
-    txtVerRel (VerRel v r) = v <> "-" <> r
-
--- | Identifier for an RPM package identified by name and arch
-showPkgIdent :: RpmPackage -> String
-showPkgIdent p = rpmName p <> showPkgArch p
-
--- | Helper to add an arch suffix
-archSuffix :: RpmPackage -> String
-archSuffix p = maybe "" ("." <>) (rpmMArch p)
-
--- | drop arch from RpmPackage
-dropRpmArch :: RpmPackage -> RpmPackage
-dropRpmArch (RpmPkg n vr _) = RpmPkg n vr Nothing
-
 -- | Render an RpmPackage
 showRpmPkg :: RpmPackage -> String
-showRpmPkg (RpmPkg n vr ma) = n <> "-" <> showPkgVerRel p <> "." <> fromMaybe "" ma
+showRpmPkg (RpmPkg n vr ma) = n <> "-" <> show vr <> "." <> fromMaybe "" ma
 
 -- | Parse an RpmPackage with arch suffix
 readRpmPkg :: String -> RpmPackage
@@ -60,3 +44,19 @@ readRpmPkg t =
     -- FIXME what if no arch suffix
     (nvr',arch) = breakOnEnd "." $ fromMaybe t $ stripSuffix ".rpm" t
     pieces = splitOn "-" $ dropEnd 1 nvr'
+
+-- | Show the version-release of an RpmPackage
+showPkgVerRel :: RpmPackage -> String
+showPkgVerRel = show . rpmVerRel
+
+-- | Identifier for an RPM package identified by name and arch
+showPkgIdent :: RpmPackage -> String
+showPkgIdent p = rpmName p <> archSuffix p
+
+-- | Helper to add an arch suffix
+archSuffix :: RpmPackage -> String
+archSuffix p = maybe "" ("." <>) (rpmMArch p)
+
+-- | drop arch from RpmPackage
+dropRpmArch :: RpmPackage -> RpmPackage
+dropRpmArch (RpmPkg n vr _) = RpmPkg n vr Nothing
