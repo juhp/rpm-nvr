@@ -35,12 +35,9 @@ instance Eq NVR where
 
 instance Ord VerRel where
   compare (VerRel v1 r1) (VerRel v2 r2) =
-    compareVR (v1,r1) (v2,r2)
-
-compareVR (v1,r1) (v2,r2) =
-  if v1 == v2
-  then compareVer r1 r2
-  else compareVer v1 v2
+    if v1 == v2
+    then compareVer r1 r2
+    else compareVer v1 v2
 
 compareVer v1 v2 =
   compare (verList v1) (verList v2)
