@@ -48,7 +48,7 @@ dropRpmArch (RpmPkg n vr _) = RpmPkg n vr Nothing
 
 -- | Render an RpmPackage
 showRpmPkg :: RpmPackage -> String
-showRpmPkg p = showPkgIdent p <> "  " <> showPkgVerRel p
+showRpmPkg (RpmPkg n vr ma) = n <> "-" <> showPkgVerRel p <> "." <> fromMaybe "" ma
 
 -- | Parse an RpmPackage with arch suffix
 readRpmPkg :: String -> RpmPackage
