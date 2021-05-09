@@ -11,7 +11,7 @@ module Data.RPM.Package (
   showRpmPkg,
   dropRpmArch,
   showPkgIdent,
-  showPkgArch
+  archSuffix
   )
 where
 
@@ -39,8 +39,8 @@ showPkgIdent :: RpmPackage -> String
 showPkgIdent p = rpmName p <> showPkgArch p
 
 -- | Helper to add an arch suffix
-showPkgArch :: RpmPackage -> String
-showPkgArch p = maybe "" ("." <>) (rpmMArch p)
+archSuffix :: RpmPackage -> String
+archSuffix p = maybe "" ("." <>) (rpmMArch p)
 
 -- | drop arch from RpmPackage
 dropRpmArch :: RpmPackage -> RpmPackage
