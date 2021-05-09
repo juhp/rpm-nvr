@@ -29,6 +29,7 @@ library
                        Data.RPM.Package
                        Data.RPM.Spec
                        Data.RPM.VerCmp
+                       Data.RPM.VersionRelease
   hs-source-dirs:      src
 
   ghc-options:         -Wall

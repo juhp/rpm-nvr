@@ -6,29 +6,18 @@
 module Data.RPM.NVR (
   NVR,
   VersionRelease(..),
-  appendRelease,
+--  appendRelease,
 --  dropRelease
   )
 where
 
 import Data.List.Extra
 
-import Data.RPM.VerCmp
+import Data.RPM.VersionRelease
 
+-- FIXME should take vercmp equality into account?
 data NVR = NVR String VersionRelease
-
-data VersionRelease = VerRel String String
-  deriving (Eq)
-
--- verrel :: VerRel -> String
--- verrel vr = version vr ++ "-" ++ release nvr
-
-instance Eq NVR where
-  (NVR n1 vr1) == (NVR n2 vr2) =
-    n1 == n2 && vr1 == vr2
-
-instance Show VersionRelease where
-  show (VerRel ver rel) = ver ++ "-" ++ rel
+  deriving Eq
 
 instance Show NVR where
   show (NVR nm verrel) = nm ++ "-" ++ show verrel
@@ -39,15 +28,9 @@ instance Read NVR where
         rel:ver:emaN -> [(NVR (intercalate "-" $ reverse emaN) (VerRel ver rel), "")]
         _ -> error $ "readsNVR: malformed NVR string: '" ++ s ++ "'"
 
-instance Ord VersionRelease where
-  compare (VerRel v1 r1) (VerRel v2 r2) =
-    case rpmVerCompare v1 v2 of
-      EQ -> rpmVerCompare r1 r2
-      o -> o
-
-appendRelease :: NVR -> String -> NVR
-appendRelease (NVR n (VerRel v r)) d =
-  NVR n (VerRel v (r ++ d))
+-- appendRelease :: NVR -> String -> NVR
+-- appendRelease (NVR n (VerRel v r)) d =
+--   NVR n (VerRel v (r ++ d))
 
 -- dropRelease :: NVR -> NV
 -- dropRelease (NVR n v _) = NV n v
