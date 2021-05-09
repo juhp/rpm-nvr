@@ -1,12 +1,4 @@
--- |
--- Module      :  RPM.Package
--- Copyright   :  (C) 2021  Jens Petersen
---
--- Maintainer  :  Jens Petersen <petersen@fedoraproject.org>
--- Stability   :  alpha
--- Portability :  portable
---
--- Explanation: handling of RPM package name-version-release's (nvr's)
+{-# LANGUAGE CPP #-}
 
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -25,6 +17,9 @@ where
 
 import Data.List.Extra
 import Data.Maybe
+#if !MIN_VERSION_base(4,11,0)
+import Data.Monoid ((<>))
+#endif
 import Data.RPM.NVR
 
 -- | RPM package with name, version-release, and maybe architecture
