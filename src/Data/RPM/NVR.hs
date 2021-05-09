@@ -7,12 +7,13 @@ module Data.RPM.NVR (
   NVR,
   VersionRelease(..),
 --  appendRelease,
---  dropRelease
+  dropRelease
   )
 where
 
 import Data.List.Extra
 
+import Data.RPM.NV
 import Data.RPM.VersionRelease
 
 -- FIXME should take vercmp equality into account?
@@ -28,9 +29,10 @@ instance Read NVR where
         rel:ver:emaN -> [(NVR (intercalate "-" $ reverse emaN) (VerRel ver rel), "")]
         _ -> error $ "readsNVR: malformed NVR string: '" ++ s ++ "'"
 
+-- -- FIXME include "." or not?
 -- appendRelease :: NVR -> String -> NVR
 -- appendRelease (NVR n (VerRel v r)) d =
 --   NVR n (VerRel v (r ++ d))
 
--- dropRelease :: NVR -> NV
--- dropRelease (NVR n v _) = NV n v
+dropRelease :: NVR -> NV
+dropRelease (NVR n (VerRel v _)) = NV n v
