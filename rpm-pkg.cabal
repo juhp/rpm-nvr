@@ -12,20 +12,22 @@ category:            Distribution
 homepage:            https://github.com/juhp/rpm-pkg
 bug-reports:         https://github.com/juhp/rpm-pkg/issues
 build-type:          Simple
---  extra-doc-files:     README.md
+extra-doc-files:     README.md
 --                       ChangeLog.md
-cabal-version:       2.0
---tested-with:         GHC == 8.4.4, GHC == 8.6.5, GHC == 8.8.4, GHC == 8.10.4
+cabal-version:       1.18
+tested-with:         GHC == 8.4.4, GHC == 8.6.5, GHC == 8.8.4, GHC == 8.10.4
 
 source-repository head
   type:                git
   location:            https://github.com/juhp/rpm-pkg.git
 
 library
-  build-depends:       base < 5
+  build-depends:       base < 5,
+                       extra
   default-language:    Haskell2010
-  exposed-modules:     RPM.NVR,
-                       RPM.Spec
+  exposed-modules:     Data.RPM.NVR
+                       Data.RPM.Package
+                       Data.RPM.Spec
   hs-source-dirs:      src
 
   ghc-options:         -Wall
