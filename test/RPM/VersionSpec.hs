@@ -1,7 +1,7 @@
 -- taken from codec-rpm-0.2.2 and based on rpm/tests/rpmvercmp.at
 -- Copyright 2017-2018 Red Hat
 
-module RPM.VersionSpec (spec) where
+module RPM.VersionSpec (verspec) where
 
 import           Test.Hspec
 import           Data.Foldable(forM_)
@@ -10,8 +10,8 @@ import           Data.RPM.VerCmp
 -- can also call rpm vercmp():
 -- `rpm --eval '%{lua: print(rpm.vercmp("$1", "$2"))}'`
 
-spec :: Spec
-spec = do
+verspec :: Spec
+verspec = do
     describe "Data.RPM.Version.vercmp" $ do
         let vercmpCases = [
                          ("1.0", "1.0", EQ),

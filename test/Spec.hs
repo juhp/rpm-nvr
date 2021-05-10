@@ -1,1 +1,6 @@
-{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+import Test.Hspec
+
+import RPM.VersionSpec
+
+main :: IO ()
+main = hspec verspec
