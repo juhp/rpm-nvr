@@ -5,7 +5,7 @@
 
 -- | A type for name-version-release of an RPM package
 module Data.RPM.NVR (
-  NVR,
+  NVR(..),
   eitherNVR,
   maybeNVR,
   VersionRelease(..),

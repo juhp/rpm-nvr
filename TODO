@@ -1,12 +1,5 @@
 - support RPM epochs (ENVR/EVR)
   - maybe Package could include Maybe Epoch
+- removeDistTag or editRelease and/or eqModDistTag
 
-
-class Versioned a where
-  takeVersion :: a -> String
-
-instance Versioned NV where
-  takeVersion (NV _ v) = v
-
-instance Versioned NVR where
-  takeVersion (NVR
+- NV/NVR vs VersionRelease/RpmPackage inconsistent naming of module & type
