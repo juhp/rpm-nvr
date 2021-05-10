@@ -64,7 +64,9 @@ import Data.Monoid ((<>))
 
 -- | Compare two version numbers and return an 'Ordering'.
 rpmVerCompare :: String -> String -> Ordering
-rpmVerCompare a b = let
+rpmVerCompare a b =
+  if a == b then EQ
+    else let
     -- strip out all non-version characters
     -- keep in mind the strings may be empty after this
     a' = dropSeparators a
@@ -76,12 +78,19 @@ rpmVerCompare a b = let
     (prefixA, suffixA) = span fn a'
     (prefixB, suffixB) = span fn b'
  in
+    if | a' == b'                                       -> EQ
        -- Nothing left means the versions are equal
-    if | null a' && null b'                             -> EQ
-       -- tilde ls less than everything, including an empty string
+       {- | null a' && null b'                             -> EQ -}
+       -- tilde is less than everything, including an empty string
        | ("~" `isPrefixOf` a') && ("~" `isPrefixOf` b') -> rpmVerCompare (tail a') (tail b')
        | ("~" `isPrefixOf` a')                            -> LT
        | ("~" `isPrefixOf` b')                            -> GT
+       -- caret is more than everything, except .
+       | ("^" `isPrefixOf` a') && ("^" `isPrefixOf` b') -> rpmVerCompare (tail a') (tail b')
+       | ("^" `isPrefixOf` a') && (null b')               -> GT
+       | (null a') && ("^" `isPrefixOf` b')               -> LT
+       | ("^" `isPrefixOf` a')                            -> LT
+       | ("^" `isPrefixOf` b')                            -> GT
        -- otherwise, if one of the strings is null, the other is greater
        | (null a')                                        -> LT
        | (null b')                                        -> GT
@@ -107,9 +116,9 @@ rpmVerCompare a b = let
     isAsciiAlpha :: Char -> Bool
     isAsciiAlpha x = isAsciiLower x || isAsciiUpper x
 
-    -- RPM only cares about ascii digits, ascii alpha, and ~
+    -- RPM only cares about ascii digits, ascii alpha, and ~ ^
     isVersionChar :: Char -> Bool
-    isVersionChar x = isDigit x || isAsciiAlpha x || x == '~'
+    isVersionChar x = isDigit x || isAsciiAlpha x || x == '~' || x == '^'
 
     dropSeparators :: String -> String
     dropSeparators = dropWhile (not . isVersionChar)

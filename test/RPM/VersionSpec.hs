@@ -1,4 +1,4 @@
--- taken from codec-rpm-0.2.2
+-- taken from codec-rpm-0.2.2 and based on rpm/tests/rpmvercmp.at
 -- Copyright 2017-2018 Red Hat
 
 module RPM.VersionSpec (spec) where
@@ -6,6 +6,9 @@ module RPM.VersionSpec (spec) where
 import           Test.Hspec
 import           Data.Foldable(forM_)
 import           Data.RPM.VerCmp
+
+-- can also call rpm vercmp():
+-- `rpm --eval '%{lua: print(rpm.vercmp("$1", "$2"))}'`
 
 spec :: Spec
 spec = do
@@ -55,6 +58,7 @@ spec = do
 
                          ("10b2", "10a1", GT),
                          ("10a2", "10b2", LT),
+
                          ("1.0aa", "1.0aa", EQ),
                          ("1.0a", "1.0aa", LT),
                          ("1.0aa", "1.0a", GT),
@@ -76,6 +80,7 @@ spec = do
                          ("2.0", "2_0", EQ),
                          ("2_0", "2.0", EQ),
 
+                         -- RhBug:178798 case
                          ("a", "a", EQ),
                          ("a+", "a+", EQ),
                          ("a+", "a_", EQ),
@@ -89,6 +94,7 @@ spec = do
                          ("+", "_", EQ),
                          ("_", "+", EQ),
 
+                         -- Basic testcases for tilde sorting
                          ("1.0~rc1", "1.0~rc1", EQ),
                          ("1.0~rc1", "1.0", LT),
                          ("1.0", "1.0~rc1", GT),
@@ -96,8 +102,34 @@ spec = do
                          ("1.0~rc2", "1.0~rc1", GT),
                          ("1.0~rc1~git123", "1.0~rc1~git123", EQ),
                          ("1.0~rc1~git123", "1.0~rc1", LT),
-                         ("1.0~rc1", "1.0~rc1~git123", GT)
-                       ]
+                         ("1.0~rc1", "1.0~rc1~git123", GT),
+
+                         -- Basic testcases for caret sorting
+                         ("1.0^", "1.0^", EQ),
+                         ("1.0^", "1.0", GT),
+                         ("1.0", "1.0^", LT),
+                         ("1.0^git1", "1.0^git1", EQ),
+                         ("1.0^git1", "1.0", GT),
+                         ("1.0", "1.0^git1", LT),
+                         ("1.0^git1", "1.0^git2", LT),
+                         ("1.0^git2", "1.0^git1", GT),
+                         ("1.0^git1", "1.01", LT),
+                         ("1.01", "1.0^git1", GT),
+                         ("1.0^20160101", "1.0^20160101", EQ),
+                         ("1.0^20160101", "1.0.1", LT),
+                         ("1.0.1", "1.0^20160101", GT),
+                         ("1.0^20160101^git1", "1.0^20160101^git1", EQ),
+                         ("1.0^20160102", "1.0^20160101^git1", GT),
+                         ("1.0^20160101^git1", "1.0^20160102", LT),
+
+                         -- Basic testcases for tilde and caret sorting
+                         ("1.0~rc1^git1", "1.0~rc1^git1", EQ),
+                         ("1.0~rc1^git1", "1.0~rc1", GT),
+                         ("1.0~rc1", "1.0~rc1^git1", LT),
+                         ("1.0^git1~pre", "1.0^git1~pre", EQ),
+                         ("1.0^git1", "1.0^git1~pre", GT),
+                         ("1.0^git1~pre", "1.0^git1", LT)
+                         ]
 
         forM_ vercmpCases $ \(verA, verB, ord) ->
           it (verA ++ " " ++ show ord ++ " " ++ verB) $
