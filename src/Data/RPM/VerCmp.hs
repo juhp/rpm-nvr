@@ -87,8 +87,8 @@ rpmVerCompare a b =
        | ("~" `isPrefixOf` b')                            -> GT
        -- caret is more than everything, except .
        | ("^" `isPrefixOf` a') && ("^" `isPrefixOf` b') -> rpmVerCompare (tail a') (tail b')
-       | ("^" `isPrefixOf` a') && (null b')               -> GT
-       | (null a') && ("^" `isPrefixOf` b')               -> LT
+       | ("^" `isPrefixOf` a') && null b'               -> GT
+       | null a' && ("^" `isPrefixOf` b')               -> LT
        | ("^" `isPrefixOf` a')                            -> LT
        | ("^" `isPrefixOf` b')                            -> GT
        -- otherwise, if one of the strings is null, the other is greater
