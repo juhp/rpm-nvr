@@ -5,6 +5,7 @@
 -- the Free Software Foundation, either version 2 of the License, or
 -- (at your option) any later version.
 
+-- | A type for a (binary) RPM package.
 module Data.RPM.Package (
   RpmPackage(..),
   readRpmPkg,
@@ -26,8 +27,9 @@ import Data.Monoid ((<>))
 #endif
 import Data.RPM.NVR
 
--- FIXME: add epoch type
 -- | RPM package with name, version-release, and maybe architecture
+--
+-- FIXME: add epoch field
 data RpmPackage = RpmPkg {rpmName :: String,
                           rpmVerRel :: VersionRelease,
                           rpmMArch :: Maybe String}
@@ -37,6 +39,7 @@ data RpmPackage = RpmPkg {rpmName :: String,
 showRpmPkg :: RpmPackage -> String
 showRpmPkg (RpmPkg n vr ma) = n <> "-" <> show vr <> "." <> fromMaybe "" ma
 
+-- | Either read an RpmPackage or return a failure
 eitherRpmPkg :: String -> Either String RpmPackage
 eitherRpmPkg s =
   case reverse pieces of
@@ -47,6 +50,7 @@ eitherRpmPkg s =
     (nvr',arch) = breakOnEnd "." $ fromMaybe s $ stripSuffix ".rpm" s
     pieces = splitOn "-" $ dropEnd 1 nvr'
 
+-- | Maybe read an RpmPackage
 maybeRpmPkg :: String -> Maybe RpmPackage
 maybeRpmPkg = eitherToMaybe . eitherRpmPkg
 

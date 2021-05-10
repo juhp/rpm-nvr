@@ -3,6 +3,7 @@
 -- the Free Software Foundation, either version 2 of the License, or
 -- (at your option) any later version.
 
+-- | A type for carrying the version and release of an rpm package.
 module Data.RPM.VersionRelease (
   VersionRelease(..),
   eitherVerRel,
@@ -15,18 +16,23 @@ import Data.List.Extra
 
 import Data.RPM.VerCmp
 
+-- | The version-release of an (rpm) package
+--
+-- FIXME: use rpmVerCompare for equality like codec-rpm, instead of derived Eq
 data VersionRelease = VerRel String String
   deriving (Eq)
 
 instance Show VersionRelease where
   show (VerRel ver rel) = ver ++ "-" ++ rel
 
+-- | Either read a package version-release or return an failure string
 eitherVerRel :: String -> Either String VersionRelease
 eitherVerRel s =
   case stripInfixEnd "-" s of
     Nothing -> Left $ "malformed VersionRelease string " ++ s
     Just (v,r) -> Right (VerRel v r)
 
+-- | Maybe read a package version-release
 maybeVerRel :: String -> Maybe VersionRelease
 maybeVerRel = eitherToMaybe . eitherVerRel
 

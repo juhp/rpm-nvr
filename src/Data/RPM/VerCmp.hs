@@ -9,6 +9,7 @@
 -- Copyright 2016-2018 Red Hat
 -- Copyright 2021 Jens Petersen
 
+-- | Compare versions or releases using rpm's vercmp algorithm
 module Data.RPM.VerCmp (rpmVerCompare)
 where
 
@@ -63,6 +64,8 @@ import Data.Monoid ((<>))
 -- rpmCategory _ = RpmOther
 
 -- | Compare two version numbers and return an 'Ordering'.
+--
+-- Native implementation of rpm's C vercmp
 rpmVerCompare :: String -> String -> Ordering
 rpmVerCompare a b =
   if a == b then EQ
@@ -80,7 +83,7 @@ rpmVerCompare a b =
  in
     if | a' == b'                                       -> EQ
        -- Nothing left means the versions are equal
-       {- | null a' && null b'                             -> EQ -}
+       {- null a' && null b'                             -> EQ -}
        -- tilde is less than everything, including an empty string
        | ("~" `isPrefixOf` a') && ("~" `isPrefixOf` b') -> rpmVerCompare (tail a') (tail b')
        | ("~" `isPrefixOf` a')                            -> LT
