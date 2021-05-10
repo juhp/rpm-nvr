@@ -29,5 +29,6 @@ jobs:
             ${{ runner.os }}-
       - run: cabal update
       - run: cabal build
+      - run: cabal test --test-show-details=direct
       - run: cabal haddock
       - run: cabal sdist

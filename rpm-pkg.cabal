@@ -7,7 +7,8 @@ license:             GPL-2
 license-file:        LICENSE
 author:              Jens Petersen <petersen@redhat.com>
 maintainer:          Jens Petersen <petersen@redhat.com>
-copyright:           2017,2021  Jens Petersen <petersen@redhat.com>
+copyright:           2016-2018  Red Hat
+                     2017,2021  Jens Petersen <petersen@redhat.com>
 category:            Distribution
 homepage:            https://github.com/juhp/rpm-pkg
 bug-reports:         https://github.com/juhp/rpm-pkg/issues
