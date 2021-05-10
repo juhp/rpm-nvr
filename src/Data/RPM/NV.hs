@@ -4,10 +4,13 @@
 -- (at your option) any later version.
 
 module Data.RPM.NV (
-  NV(..)
+  NV(..),
+  eitherNV,
+  maybeNV
   )
 where
 
+import Data.Either.Extra
 import Data.List.Extra
 
 data NV = NV {name :: String,
@@ -17,8 +20,17 @@ data NV = NV {name :: String,
 instance Show NV where
   show (NV nm ver) = nm ++ "-" ++ ver
 
+eitherNV :: String -> Either String NV
+eitherNV s =
+  case stripInfixEnd "-" s of
+    Nothing -> Left $ "malformed NV string " ++ s
+    Just (n,v) -> Right (NV n v)
+
+maybeNV :: String -> Maybe NV
+maybeNV = eitherToMaybe . eitherNV
+
 instance Read NV where
   readsPrec _ s =
-    case stripInfixEnd "-" s of
-      Nothing -> error $ "readsNV: malformed NV string " ++ s
-      Just (n,v) -> [(NV n v, "")]
+    case eitherNV s of
+      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
+      Right nv -> [(nv, "")]

@@ -8,6 +8,8 @@
 module Data.RPM.Package (
   RpmPackage(..),
   readRpmPkg,
+  eitherRpmPkg,
+  maybeRpmPkg,
   showRpmPkg,
   dropRpmArch,
   showPkgIdent,
@@ -16,6 +18,7 @@ module Data.RPM.Package (
   )
 where
 
+import Data.Either.Extra
 import Data.List.Extra
 import Data.Maybe
 #if !MIN_VERSION_base(4,11,0)
@@ -34,16 +37,22 @@ data RpmPackage = RpmPkg {rpmName :: String,
 showRpmPkg :: RpmPackage -> String
 showRpmPkg (RpmPkg n vr ma) = n <> "-" <> show vr <> "." <> fromMaybe "" ma
 
--- | Parse an RpmPackage with arch suffix
-readRpmPkg :: String -> RpmPackage
-readRpmPkg t =
+eitherRpmPkg :: String -> Either String RpmPackage
+eitherRpmPkg s =
   case reverse pieces of
-    rel:ver:emaN -> RpmPkg (intercalate "-" $ reverse emaN) (VerRel ver rel) (Just arch)
-    _ -> error $ "Malformed rpm package name: " ++ t
+    rel:ver:emaN -> Right $ RpmPkg (intercalate "-" $ reverse emaN) (VerRel ver rel) (Just arch)
+    _ -> Left $ "Malformed RpmPackage: " ++ s
   where
     -- FIXME what if no arch suffix
-    (nvr',arch) = breakOnEnd "." $ fromMaybe t $ stripSuffix ".rpm" t
+    (nvr',arch) = breakOnEnd "." $ fromMaybe s $ stripSuffix ".rpm" s
     pieces = splitOn "-" $ dropEnd 1 nvr'
+
+maybeRpmPkg :: String -> Maybe RpmPackage
+maybeRpmPkg = eitherToMaybe . eitherRpmPkg
+
+-- | Parse an RpmPackage with arch suffix
+readRpmPkg :: String -> RpmPackage
+readRpmPkg = either error id . eitherRpmPkg
 
 -- | Show the version-release of an RpmPackage
 showPkgVerRel :: RpmPackage -> String

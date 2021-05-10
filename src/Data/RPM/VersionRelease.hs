@@ -4,10 +4,13 @@
 -- (at your option) any later version.
 
 module Data.RPM.VersionRelease (
-  VersionRelease(..)
+  VersionRelease(..),
+  eitherVerRel,
+  maybeVerRel
   )
 where
 
+import Data.Either.Extra
 import Data.List.Extra
 
 import Data.RPM.VerCmp
@@ -18,11 +21,20 @@ data VersionRelease = VerRel String String
 instance Show VersionRelease where
   show (VerRel ver rel) = ver ++ "-" ++ rel
 
+eitherVerRel :: String -> Either String VersionRelease
+eitherVerRel s =
+  case stripInfixEnd "-" s of
+    Nothing -> Left $ "malformed VersionRelease string " ++ s
+    Just (v,r) -> Right (VerRel v r)
+
+maybeVerRel :: String -> Maybe VersionRelease
+maybeVerRel = eitherToMaybe . eitherVerRel
+
 instance Read VersionRelease where
   readsPrec _ s =
-    case stripInfixEnd "-" s of
-      Nothing -> error $ "readsPrec: malformed VersionRelease string " ++ s
-      Just (v,r) -> [(VerRel v r, "")]
+    case eitherVerRel s of
+      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
+      Right vr -> [(vr, "")]
 
 instance Ord VersionRelease where
   compare (VerRel v1 r1) (VerRel v2 r2) =

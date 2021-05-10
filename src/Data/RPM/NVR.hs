@@ -5,12 +5,15 @@
 
 module Data.RPM.NVR (
   NVR,
+  eitherNVR,
+  maybeNVR,
   VersionRelease(..),
 --  appendRelease,
   dropRelease
   )
 where
 
+import Data.Either.Extra
 import Data.List.Extra
 
 import Data.RPM.NV
@@ -23,11 +26,20 @@ data NVR = NVR String VersionRelease
 instance Show NVR where
   show (NVR nm verrel) = nm ++ "-" ++ show verrel
 
+eitherNVR :: String -> Either String NVR
+eitherNVR s =
+  case reverse (splitOn "-" s) of
+    rel:ver:emaN -> Right (NVR (intercalate "-" $ reverse emaN) (VerRel ver rel))
+    _ -> Left $ "malformed NVR string: '" ++ s ++ "'"
+
+maybeNVR :: String -> Maybe NVR
+maybeNVR = eitherToMaybe . eitherNVR
+
 instance Read NVR where
   readsPrec _ s =
-      case reverse (splitOn "-" s) of
-        rel:ver:emaN -> [(NVR (intercalate "-" $ reverse emaN) (VerRel ver rel), "")]
-        _ -> error $ "readsNVR: malformed NVR string: '" ++ s ++ "'"
+    case eitherNVR s of
+      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
+      Right nvr -> [(nvr, "")]
 
 -- -- FIXME include "." or not?
 -- appendRelease :: NVR -> String -> NVR

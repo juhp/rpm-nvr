@@ -1,3 +1,3 @@
 [versions]
-# lts-2 too old
-oldest = lts-4
+# was 4 (lts-2 too old) before using extra eitherToMaybe
+oldest = lts-8
