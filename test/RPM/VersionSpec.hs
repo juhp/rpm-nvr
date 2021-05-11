@@ -133,4 +133,4 @@ verspec = do
 
         forM_ vercmpCases $ \(verA, verB, ord) ->
           it (verA ++ " " ++ show ord ++ " " ++ verB) $
-            rpmVerCompare verA verB `shouldBe` ord
+          rpmVerCompare verA verB `shouldBe` ord
