@@ -52,7 +52,8 @@ test-suite tests
     type:               exitcode-stdio-1.0
     hs-source-dirs:     test
     main-is:            Spec.hs
-    other-modules:      RPM.VersionSpec
+    other-modules:      RPM.PackageSpec
+                        RPM.VersionSpec
     build-depends:      hspec,
                         base < 5.0,
                         rpm-pkg

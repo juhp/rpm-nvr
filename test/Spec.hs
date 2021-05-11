@@ -1,6 +1,8 @@
 import Test.Hspec
 
+import RPM.PackageSpec
 import RPM.VersionSpec
 
 main :: IO ()
-main = hspec verspec
+main =
+  mapM_ hspec [verspec,pkgspec]

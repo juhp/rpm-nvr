@@ -3,3 +3,4 @@
 - removeDistTag or editRelease and/or eqModDistTag
 
 - NV/NVR vs VersionRelease/RpmPackage inconsistent naming of module & type
+- replace Show with functions or Display/Pretty?

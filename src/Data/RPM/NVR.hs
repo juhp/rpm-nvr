@@ -6,6 +6,7 @@
 -- | A type for name-version-release of an RPM package
 module Data.RPM.NVR (
   NVR(..),
+  readNVR,
   eitherNVR,
   maybeNVR,
   VersionRelease(..),
@@ -31,18 +32,22 @@ instance Show NVR where
 eitherNVR :: String -> Either String NVR
 eitherNVR s =
   case reverse (splitOn "-" s) of
-    rel:ver:emaN -> Right (NVR (intercalate "-" $ reverse emaN) (VerRel ver rel))
-    _ -> Left $ "malformed NVR string: '" ++ s ++ "'"
+    rel:ver:emaN ->
+      if any null (rel:ver:emaN)
+      then Left $ "NVR cannot start or end with '-'s: " ++ s
+      else Right (NVR (intercalate "-" $ reverse emaN) (VerRel ver rel))
+    _ ->
+      Left $ "malformed NVR string: '" ++ s ++ "'"
 
 -- | Maybe read a package name-version-release string
 maybeNVR :: String -> Maybe NVR
 maybeNVR = eitherToMaybe . eitherNVR
 
-instance Read NVR where
-  readsPrec _ s =
-    case eitherNVR s of
-      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
-      Right nvr -> [(nvr, "")]
+-- | read an NVR
+--
+-- Errors if not of the form "name-version-release"
+readNVR :: String -> NVR
+readNVR = either error id . eitherNVR
 
 -- -- FIXME include "." or not?
 -- appendRelease :: NVR -> String -> NVR

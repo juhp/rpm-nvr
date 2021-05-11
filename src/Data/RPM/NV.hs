@@ -6,6 +6,7 @@
 -- | An NV type contains the name and version of a package only.
 module Data.RPM.NV (
   NV(..),
+  readNV,
   eitherNV,
   maybeNV
   )
@@ -24,19 +25,23 @@ data NV = NV {name :: String,
 instance Show NV where
   show (NV nm ver) = nm ++ "-" ++ ver
 
--- | Either read a package name-version or return error string
+-- | Read a package name-version or return a failure string
 eitherNV :: String -> Either String NV
+eitherNV "" = Left "NV cannot be empty string"
 eitherNV s =
   case stripInfixEnd "-" s of
-    Nothing -> Left $ "malformed NV string " ++ s
-    Just (n,v) -> Right (NV n v)
+    Just (n,v) ->
+      if null n || null v
+      then Left $ "NV must not start or end with '-': " ++ s
+      else Right (NV n v)
+    Nothing -> Left $ "NV must contain '-': " ++ s
 
 -- | Maybe read an package name-version
 maybeNV :: String -> Maybe NV
 maybeNV = eitherToMaybe . eitherNV
 
-instance Read NV where
-  readsPrec _ s =
-    case eitherNV s of
-      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
-      Right nv -> [(nv, "")]
+-- | Read an NV
+--
+-- Errors if not of the form "name-version"
+readNV :: String -> NV
+readNV =  either error id . eitherNV

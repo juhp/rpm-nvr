@@ -6,6 +6,7 @@
 -- | A type for carrying the version and release of an rpm package.
 module Data.RPM.VersionRelease (
   VersionRelease(..),
+  readVerRel,
   eitherVerRel,
   maybeVerRel
   )
@@ -29,18 +30,21 @@ instance Show VersionRelease where
 eitherVerRel :: String -> Either String VersionRelease
 eitherVerRel s =
   case stripInfixEnd "-" s of
-    Nothing -> Left $ "malformed VersionRelease string " ++ s
-    Just (v,r) -> Right (VerRel v r)
+    Just (v,r) ->
+      if null v || null r
+      then error $ "VerRel cannot start or end with '-': " ++ s
+      else Right (VerRel v r)
+    Nothing -> Left $ "VerRel must contain a '-': " ++ s
 
 -- | Maybe read a package version-release
 maybeVerRel :: String -> Maybe VersionRelease
 maybeVerRel = eitherToMaybe . eitherVerRel
 
-instance Read VersionRelease where
-  readsPrec _ s =
-    case eitherVerRel s of
-      Left err -> error $ "readsPrec: " ++ err ++ " " ++ s
-      Right vr -> [(vr, "")]
+-- | Read a version-release
+--
+-- Errors if malformed
+readVerRel :: String -> VersionRelease
+readVerRel = either error id . eitherVerRel
 
 instance Ord VersionRelease where
   compare (VerRel v1 r1) (VerRel v2 r2) =

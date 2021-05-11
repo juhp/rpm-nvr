@@ -29,6 +29,8 @@ import Data.RPM.NVR
 
 -- | RPM package with name, version-release, and maybe architecture
 --
+-- If arch is not needed use NVR instead.
+--
 -- FIXME: add epoch field
 data RpmPackage = RpmPkg {rpmName :: String,
                           rpmVerRel :: VersionRelease,
@@ -39,12 +41,17 @@ data RpmPackage = RpmPkg {rpmName :: String,
 showRpmPkg :: RpmPackage -> String
 showRpmPkg (RpmPkg n vr ma) = n <> "-" <> show vr <> "." <> fromMaybe "" ma
 
--- | Either read an RpmPackage or return a failure
+-- | Either read a name-version-release.arch or return a failure string
 eitherRpmPkg :: String -> Either String RpmPackage
+eitherRpmPkg "" = Left "RpmPackage string cannot be empty"
+eitherRpmPkg s@('-':_) = Left $ "RpmPackage cannot start with '-': " ++ s
 eitherRpmPkg s =
   case reverse pieces of
-    rel:ver:emaN -> Right $ RpmPkg (intercalate "-" $ reverse emaN) (VerRel ver rel) (Just arch)
-    _ -> Left $ "Malformed RpmPackage: " ++ s
+    ps@(rel:ver:emaN) ->
+      if any null (arch:ps)
+      then Left $ "Bad RpmPackage string: " ++ s
+      else Right $ RpmPkg (intercalate "-" $ reverse emaN) (VerRel ver rel) (Just arch)
+    _ -> Left $ "RpmPackage string must have form 'name-version-release.arch': " ++ s
   where
     -- FIXME what if no arch suffix
     (nvr',arch) = breakOnEnd "." $ fromMaybe s $ stripSuffix ".rpm" s
@@ -55,6 +62,8 @@ maybeRpmPkg :: String -> Maybe RpmPackage
 maybeRpmPkg = eitherToMaybe . eitherRpmPkg
 
 -- | Parse an RpmPackage with arch suffix
+--
+-- Errors if not of the form "name-version-release[.arch]"
 readRpmPkg :: String -> RpmPackage
 readRpmPkg = either error id . eitherRpmPkg
 
