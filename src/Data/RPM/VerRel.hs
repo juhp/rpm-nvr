@@ -4,8 +4,8 @@
 -- (at your option) any later version.
 
 -- | A type for carrying the version and release of an rpm package.
-module Data.RPM.VersionRelease (
-  VersionRelease(..),
+module Data.RPM.VerRel (
+  VerRel(..),
   readVerRel,
   eitherVerRel,
   maybeVerRel
@@ -20,14 +20,14 @@ import Data.RPM.VerCmp
 -- | The version-release of an (rpm) package
 --
 -- FIXME: use rpmVerCompare for equality like codec-rpm, instead of derived Eq
-data VersionRelease = VerRel String String
+data VerRel = VerRel String String
   deriving (Eq)
 
-instance Show VersionRelease where
+instance Show VerRel where
   show (VerRel ver rel) = ver ++ "-" ++ rel
 
 -- | Either read a package version-release or return an failure string
-eitherVerRel :: String -> Either String VersionRelease
+eitherVerRel :: String -> Either String VerRel
 eitherVerRel s =
   case stripInfixEnd "-" s of
     Just (v,r) ->
@@ -37,20 +37,20 @@ eitherVerRel s =
     Nothing -> Left $ "VerRel must contain a '-': " ++ s
 
 -- | Maybe read a package version-release
-maybeVerRel :: String -> Maybe VersionRelease
+maybeVerRel :: String -> Maybe VerRel
 maybeVerRel = eitherToMaybe . eitherVerRel
 
 -- | Read a version-release
 --
 -- Errors if malformed
-readVerRel :: String -> VersionRelease
+readVerRel :: String -> VerRel
 readVerRel = either error id . eitherVerRel
 
-instance Ord VersionRelease where
+instance Ord VerRel where
   compare (VerRel v1 r1) (VerRel v2 r2) =
     case rpmVerCompare v1 v2 of
       EQ -> rpmVerCompare r1 r2
       o -> o
 
--- appendRelease :: VersionRelease -> String -> VersionRelease
+-- appendRelease :: VerRel -> String -> VerRel
 -- appendRelease (VerRel v r) d = VerRel v (r ++ d)

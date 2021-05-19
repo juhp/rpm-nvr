@@ -26,11 +26,12 @@ library
   build-depends:       base < 5,
                        extra >= 1.5.1
   default-language:    Haskell2010
-  exposed-modules:     Data.RPM.NV
+  exposed-modules:     Data.RPM
+                       Data.RPM.NV
                        Data.RPM.NVR
-                       Data.RPM.Package
+                       Data.RPM.NVRA
                        Data.RPM.VerCmp
-                       Data.RPM.VersionRelease
+                       Data.RPM.VerRel
   hs-source-dirs:      src
 
   ghc-options:         -Wall

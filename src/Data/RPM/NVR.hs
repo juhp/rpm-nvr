@@ -9,20 +9,17 @@ module Data.RPM.NVR (
   readNVR,
   eitherNVR,
   maybeNVR,
-  VersionRelease(..),
---  appendRelease,
-  dropRelease
+  VerRel(..),
   )
 where
 
 import Data.Either.Extra
 import Data.List.Extra
 
-import Data.RPM.NV
-import Data.RPM.VersionRelease
+import Data.RPM.VerRel
 
 -- | An rpm package name-version-release
-data NVR = NVR String VersionRelease
+data NVR = NVR String VerRel
   deriving Eq
 
 instance Show NVR where
@@ -48,12 +45,3 @@ maybeNVR = eitherToMaybe . eitherNVR
 -- Errors if not of the form "name-version-release"
 readNVR :: String -> NVR
 readNVR = either error id . eitherNVR
-
--- -- FIXME include "." or not?
--- appendRelease :: NVR -> String -> NVR
--- appendRelease (NVR n (VerRel v r)) d =
---   NVR n (VerRel v (r ++ d))
-
--- | Map a name-version-release into a name-version
-dropRelease :: NVR -> NV
-dropRelease (NVR n (VerRel v _)) = NV n v
