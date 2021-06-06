@@ -5,7 +5,9 @@ module Data.RPM (
   VerRel(..),
   rpmVerCompare,
   dropRelease,
-  addRelease
+  addRelease,
+  dropArch,
+  addArch
   ) where
 
 import Data.RPM.NV
@@ -22,3 +24,12 @@ dropRelease (NVR n (VerRel v _)) = NV n v
 addRelease :: NV -> String -> NVR
 addRelease _ "" = error "addRelease: release cannot be empty"
 addRelease (NV n v) r = NVR n (VerRel v r)
+
+-- | Map a name-version-release.arch into a name-version-release
+dropArch :: NVRA -> NVR
+dropArch (NVRA n vr _) = NVR n vr
+
+-- | Add an arch to NVR to make an NVRA
+addArch :: NVR -> String -> NVRA
+addArch _ "" = error "addArch: arch cannot be empty"
+addArch (NVR n vr) a = NVRA n vr a
