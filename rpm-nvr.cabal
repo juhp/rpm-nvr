@@ -1,4 +1,4 @@
-name:                rpm-pkg
+name:                rpm-nvr
 version:             0.1.0
 synopsis:            RPM package name-version-release library
 description:
@@ -10,8 +10,8 @@ maintainer:          Jens Petersen <petersen@redhat.com>
 copyright:           2016-2018  Red Hat
                      2017,2021  Jens Petersen <petersen@redhat.com>
 category:            Distribution
-homepage:            https://github.com/juhp/rpm-pkg
-bug-reports:         https://github.com/juhp/rpm-pkg/issues
+homepage:            https://github.com/juhp/rpm-nvr
+bug-reports:         https://github.com/juhp/rpm-nvr/issues
 build-type:          Simple
 extra-doc-files:     README.md
 --                       ChangeLog.md
@@ -20,7 +20,7 @@ tested-with:         GHC == 8.4.4, GHC == 8.6.5, GHC == 8.8.4, GHC == 8.10.4
 
 source-repository head
   type:                git
-  location:            https://github.com/juhp/rpm-pkg.git
+  location:            https://github.com/juhp/rpm-nvr.git
 
 library
   build-depends:       base < 5,
@@ -57,7 +57,7 @@ test-suite tests
                         RPM.VersionSpec
     build-depends:      hspec,
                         base < 5.0,
-                        rpm-pkg
+                        rpm-nvr
 
     default-language:   Haskell2010
 
