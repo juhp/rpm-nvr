@@ -2,13 +2,21 @@ name:                rpm-nvr
 version:             0.1.0
 synopsis:            RPM package name-version-release library
 description:
-            The library provides types for RPM package name-version-releases.
-            Specifically in separate modules: NV (name-version),
-            NVR (name-version-release), NVRA (name-version-release.arch),
-            VerRel (version-release), and VerCmp for comparing RPM versions
-            or releases (and used to order VerRel).
-
-            The testsuite includes testcases for ordering rpm versions
+            The library provides types related to RPM package
+            name-version-releases. There are modules for:
+            .
+            * NV (name-version)
+            .
+            * NVR (name-version-release)
+            .
+            * NVRA (name-version-release.arch)
+            .
+            * VerRel (version-release)
+            .
+            * VerCmp for comparing RPM versions or releases
+            (used to order VerRel).
+            .
+            The testsuite includes testcases for comparing rpm versions
             from the main rpm project.
 license:             GPL-2
 license-file:        LICENSE
