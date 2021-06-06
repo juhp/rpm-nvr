@@ -1,9 +1,10 @@
+-- | This module re-exports most of the submodules.
 module Data.RPM (
-  NV(..),
-  NVR(..),
-  NVRA(..),
-  VerRel(..),
-  rpmVerCompare,
+  module Data.RPM.NV,
+  module Data.RPM.NVR,
+  module Data.RPM.NVRA,
+  module Data.RPM.VerRel,
+  module Data.RPM.VerCmp,
   dropRelease,
   addRelease,
   dropArch,
@@ -14,7 +15,7 @@ import Data.RPM.NV
 import Data.RPM.NVR
 import Data.RPM.NVRA
 import Data.RPM.VerCmp
---import Data.RPM.VerRel
+import Data.RPM.VerRel
 
 -- | Map a name-version-release into a name-version
 dropRelease :: NVR -> NV

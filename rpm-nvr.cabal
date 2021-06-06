@@ -3,7 +3,7 @@ version:             0.1.0
 synopsis:            RPM package name-version-release library
 description:
             The library provides types related to RPM package
-            name-version-releases. There are modules for:
+            name-version-releases. There are modules for reading and showing:
             .
             * NV (name-version)
             .
@@ -15,14 +15,11 @@ description:
             .
             * VerCmp for comparing RPM versions or releases
             (used to order VerRel).
-            .
-            The testsuite includes testcases for comparing rpm versions
-            from the main rpm project.
 license:             GPL-2
 license-file:        LICENSE
 author:              Jens Petersen <petersen@redhat.com>
 maintainer:          Jens Petersen <petersen@redhat.com>
-copyright:           2016-2018  Red Hat
+copyright:           2016-2018  Red Hat,
                      2017,2021  Jens Petersen <petersen@redhat.com>
 category:            Distribution
 homepage:            https://github.com/juhp/rpm-nvr

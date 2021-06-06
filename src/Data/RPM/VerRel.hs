@@ -18,12 +18,14 @@ import Data.List.Extra
 
 import Data.RPM.VerCmp
 
--- | The version-release of an (rpm) package
+-- | The version-release of an (rpm) package, which is ordered by
+-- @rpmVerCompare@ for version and release.
 --
--- FIXME: use rpmVerCompare for equality like codec-rpm, instead of derived Eq
+-- FIXME: note currently rpmVerCompare is not used for Eq (like codec-rpm).
 data VerRel = VerRel String String
   deriving (Eq)
 
+-- | Display a VerRel
 showVerRel :: VerRel -> String
 showVerRel (VerRel ver rel) = ver ++ "-" ++ rel
 
