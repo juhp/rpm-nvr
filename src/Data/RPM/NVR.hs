@@ -6,6 +6,7 @@
 -- | A type for name-version-release of an RPM package
 module Data.RPM.NVR (
   NVR(..),
+  showNVR,
   readNVR,
   eitherNVR,
   maybeNVR,
@@ -22,8 +23,9 @@ import Data.RPM.VerRel
 data NVR = NVR String VerRel
   deriving Eq
 
-instance Show NVR where
-  show (NVR nm verrel) = nm ++ "-" ++ show verrel
+-- | render an name-version-release
+showNVR :: NVR -> String
+showNVR (NVR nm verrel) = nm ++ "-" ++ showVerRel verrel
 
 -- | Either read a package name-version-release or return a failure string
 eitherNVR :: String -> Either String NVR

@@ -1,5 +1,3 @@
-- support RPM epochs (ENVR/EVR)
-  - maybe Package could include Maybe Epoch
+- support RPM epochs (ENVR/EVR/EVRA)
+  - maybe NVRA could include Maybe Epoch
 - removeDistTag or editRelease and/or eqModDistTag
-
-- replace Show with functions or Display/Pretty?

@@ -6,6 +6,7 @@
 -- | A type for carrying the version and release of an rpm package.
 module Data.RPM.VerRel (
   VerRel(..),
+  showVerRel,
   readVerRel,
   eitherVerRel,
   maybeVerRel
@@ -23,8 +24,8 @@ import Data.RPM.VerCmp
 data VerRel = VerRel String String
   deriving (Eq)
 
-instance Show VerRel where
-  show (VerRel ver rel) = ver ++ "-" ++ rel
+showVerRel :: VerRel -> String
+showVerRel (VerRel ver rel) = ver ++ "-" ++ rel
 
 -- | Either read a package version-release or return an failure string
 eitherVerRel :: String -> Either String VerRel

@@ -12,12 +12,12 @@ pkgspec = do
   describe "NV" $ do
     forM_ ["my-pkg-1.0.1"] $ \nv ->
       it nv $
-      show (readNV nv) `shouldBe` nv
+      showNV (readNV nv) `shouldBe` nv
 
   describe "NVR" $ do
     forM_ ["my-pkg-1.0.1-1.2"] $ \nvr ->
       it nvr $
-      show (readNVR nvr) `shouldBe` nvr
+      showNVR (readNVR nvr) `shouldBe` nvr
 
   describe "NVRA" $ do
     forM_ ["my-pkg-1.0.1-1.2.x86_64"] $ \pkg ->

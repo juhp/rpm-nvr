@@ -24,6 +24,7 @@ import Data.Maybe
 import Data.Monoid ((<>))
 #endif
 import Data.RPM.NVR
+import Data.RPM.VerRel
 
 -- | RPM package with name, version-release, and architecture
 --
@@ -37,7 +38,7 @@ data NVRA = NVRA {rpmName :: String,
 
 -- | Render an RpmPackage
 showNVRA :: NVRA -> String
-showNVRA (NVRA n vr a) = n <> "-" <> show vr <> "." <> a
+showNVRA (NVRA n vr a) = n <> "-" <> showVerRel vr <> "." <> a
 
 -- | Either read a name-version-release.arch or return a failure string
 eitherNVRA :: String -> Either String NVRA
@@ -68,9 +69,9 @@ maybeNVRA = eitherToMaybe . eitherNVRA
 readNVRA :: String -> NVRA
 readNVRA = either error id . eitherNVRA
 
--- | Show the version-release of an NVRA
+-- | Render the version-release of an NVRA
 showPkgVerRel :: NVRA -> String
-showPkgVerRel = show . rpmVerRel
+showPkgVerRel = showVerRel . rpmVerRel
 
 -- | Identifier for an RPM package identified by name and arch
 showPkgIdent :: NVRA -> String

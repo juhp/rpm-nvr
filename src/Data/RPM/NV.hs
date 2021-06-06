@@ -6,6 +6,7 @@
 -- | An NV type contains the name and version of a package only.
 module Data.RPM.NV (
   NV(..),
+  showNV,
   readNV,
   eitherNV,
   maybeNV
@@ -20,10 +21,9 @@ data NV = NV {name :: String,
               version :: String}
   deriving (Eq)
 
--- FIXME use pretty?
--- | Show instance for displaying NV (which should be Read'able)
-instance Show NV where
-  show (NV nm ver) = nm ++ "-" ++ ver
+-- | Render an name-version
+showNV :: NV -> String
+showNV (NV nm ver) = nm ++ "-" ++ ver
 
 -- | Read a package name-version or return a failure string
 eitherNV :: String -> Either String NV
