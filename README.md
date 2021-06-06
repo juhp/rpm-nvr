@@ -7,5 +7,7 @@ which is implemented as rpmVerCompare.
 
 See the haddock documentation for more details.
 
+rpm-nvr is distributed under the GPLv2+ license.
+
 The testsuite includes testcases for comparing rpm versions
 from the main rpm project.
