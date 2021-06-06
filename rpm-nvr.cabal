@@ -1,6 +1,6 @@
 name:                rpm-nvr
 version:             0.1.0
-synopsis:            RPM package name-version-release library
+synopsis:            RPM package name-version-release datatypes
 description:
             The library provides types related to RPM package
             name-version-releases. There are modules for reading and showing:
