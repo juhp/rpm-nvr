@@ -47,7 +47,7 @@ eitherNVRA s@('-':_) = Left $ "NVRA cannot start with '-': " ++ s
 eitherNVRA s =
   let nvra = fromMaybe s $ stripSuffix ".rpm" s
   in
-    case reverse ((splitOn "-") nvra) of
+    case reverse (splitOn "-" nvra) of
       ps@(relarch:ver:emaN) ->
         if any null ps
         then Left $ "Bad NVRA string: " ++ s
