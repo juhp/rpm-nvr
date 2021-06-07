@@ -61,6 +61,8 @@ library
                        -Wpartial-fields
   if impl(ghc >= 8.10)
     ghc-options:       -Wunused-packages
+  if impl(ghc < 7.6)
+     buildable: False
 
 test-suite tests
     type:               exitcode-stdio-1.0
