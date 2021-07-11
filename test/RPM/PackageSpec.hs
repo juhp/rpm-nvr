@@ -6,6 +6,8 @@ import           Data.RPM.NV
 import           Data.RPM.NVR
 import           Data.RPM.NVRA
 
+import System.FilePath (dropExtension)
+
 -- FIXME add some failures too
 pkgspec :: Spec
 pkgspec = do
@@ -23,3 +25,8 @@ pkgspec = do
     forM_ ["my-pkg-1.0.1-1.2.x86_64"] $ \pkg ->
       it pkg $
       showNVRA (readNVRA pkg) `shouldBe` pkg
+
+  describe "NVRA.rpm" $ do
+    forM_ ["my-pkg-1.0.1-1.2.x86_64.rpm"] $ \pkg ->
+      it pkg $
+      showNVRA (readNVRA pkg) `shouldBe` dropExtension pkg
