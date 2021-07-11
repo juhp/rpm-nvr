@@ -22,7 +22,8 @@ import Data.RPM.VerCmp
 -- @rpmVerCompare@ for version and release.
 --
 -- FIXME: note currently rpmVerCompare is not used for Eq (like codec-rpm).
-data VerRel = VerRel String String
+data VerRel = VerRel {vrVersion :: String,
+                      vrRelease :: String}
   deriving (Eq)
 
 -- | Display a VerRel

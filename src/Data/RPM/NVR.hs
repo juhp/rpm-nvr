@@ -20,7 +20,8 @@ import Data.List.Extra
 import Data.RPM.VerRel
 
 -- | An rpm package name-version-release
-data NVR = NVR String VerRel
+data NVR = NVR {nvrName :: String,
+                nvrVerRel :: VerRel}
   deriving Eq
 
 -- | render an name-version-release
