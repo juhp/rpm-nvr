@@ -19,12 +19,12 @@ where
 
 import Data.Either.Extra
 import Data.List.Extra
-import Data.Maybe
 #if !MIN_VERSION_base(4,11,0)
 import Data.Monoid ((<>))
 #endif
 import Data.RPM.NVR
 import Data.RPM.VerRel
+import System.FilePath (takeFileName)
 
 -- | RPM package with name, version-release, and architecture
 --
@@ -45,7 +45,7 @@ eitherNVRA :: String -> Either String NVRA
 eitherNVRA "" = Left "NVRA string cannot be empty"
 eitherNVRA s@('-':_) = Left $ "NVRA cannot start with '-': " ++ s
 eitherNVRA s =
-  let nvra = fromMaybe s $ stripSuffix ".rpm" s
+  let nvra = dropSuffix ".rpm" $ takeFileName s
   in
     case reverse (splitOn "-" nvra) of
       ps@(relarch:ver:emaN) ->
