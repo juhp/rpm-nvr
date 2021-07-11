@@ -19,6 +19,9 @@ where
 
 import Data.Either.Extra
 import Data.List.Extra
+#if !MIN_VERSION_extra(1,6,4)
+import Data.Maybe (fromMaybe)
+#endif
 #if !MIN_VERSION_base(4,11,0)
 import Data.Monoid ((<>))
 #endif
@@ -41,6 +44,8 @@ showNVRA :: NVRA -> String
 showNVRA (NVRA n vr a) = n <> "-" <> showVerRel vr <> "." <> a
 
 -- | Either read a name-version-release.arch or return a failure string
+--
+-- Strips off ".rpm" extension and any directory path prefix.
 eitherNVRA :: String -> Either String NVRA
 eitherNVRA "" = Left "NVRA string cannot be empty"
 eitherNVRA s@('-':_) = Left $ "NVRA cannot start with '-': " ++ s
@@ -76,3 +81,8 @@ showPkgVerRel = showVerRel . rpmVerRel
 -- | Identifier for an RPM package identified by name and arch
 showPkgIdent :: NVRA -> String
 showPkgIdent p = rpmName p <> "." <> rpmArch p
+
+#if !MIN_VERSION_extra(1,6,4)
+dropSuffix :: Eq a => [a] -> [a] -> [a]
+dropSuffix a b = fromMaybe b $ stripSuffix a b
+#endif
