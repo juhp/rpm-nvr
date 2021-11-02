@@ -25,18 +25,17 @@ import Data.Monoid ((<>))
 rpmVerCompare :: String -> String -> Ordering
 rpmVerCompare a b =
   if a == b then EQ
-    else let
+  else
     -- strip out all non-version characters
     -- keep in mind the strings may be empty after this
-    a' = dropSeparators a
-    b' = dropSeparators b
-
-    -- rpm compares strings by digit and non-digit components, so grab the first
-    -- component of one type
-    fn = if isDigit (head a') then isDigit else isAsciiAlpha
-    (prefixA, suffixA) = span fn a'
-    (prefixB, suffixB) = span fn b'
- in
+    let a' = dropSeparators a
+        b' = dropSeparators b
+        -- rpm compares strings by digit and non-digit components,
+        -- so grab the first component of one type
+        fn = if isDigit (head a') then isDigit else isAsciiAlpha
+        (prefixA, suffixA) = span fn a'
+        (prefixB, suffixB) = span fn b'
+    in
     if | a' == b'                                       -> EQ
        -- Nothing left means the versions are equal
        {- null a' && null b'                             -> EQ -}
@@ -53,9 +52,10 @@ rpmVerCompare a b =
        -- otherwise, if one of the strings is null, the other is greater
        | (null a')                                        -> LT
        | (null b')                                        -> GT
-       -- Now we have two non-null strings, starting with a non-tilde version character
-       -- If one prefix is a number and the other is a string, the one that is a number
-       -- is greater.
+       -- Now we have two non-null strings starting with
+       -- a non-tilde version character.
+       -- If one prefix is a number and the other is a string,
+       -- the one that is a number is greater.
        | isDigit (head a') && (not . isDigit) (head b') -> GT
        | (not . isDigit) (head a') && isDigit (head b') -> LT
        | isDigit (head a')                                -> (prefixA `compareAsInts` prefixB) <> (suffixA `rpmVerCompare` suffixB)
@@ -65,11 +65,17 @@ rpmVerCompare a b =
     -- the version numbers can overflow Int, so strip leading 0's and do a string compare,
     -- longest string wins
     compareAsInts x y =
-        let x' = dropWhile (== '0') x
-            y' = dropWhile (== '0') y
-        in
-            if length x' > length y' then GT
-            else x' `compare` y'
+      if | x == y -> EQ
+         | null x -> LT
+         | null y -> GT
+         | otherwise ->
+           let x' = dropWhile (== '0') x
+               y' = dropWhile (== '0') y
+           in
+             case compare (length x') (length y') of
+               EQ ->
+                 (read x' :: Int) `compare` read y'
+               o -> o
 
     -- isAlpha returns any unicode alpha, but we just want ASCII characters
     isAsciiAlpha :: Char -> Bool

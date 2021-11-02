@@ -128,7 +128,10 @@ verspec = do
                          ("1.0~rc1", "1.0~rc1^git1", LT),
                          ("1.0^git1~pre", "1.0^git1~pre", EQ),
                          ("1.0^git1", "1.0^git1~pre", GT),
-                         ("1.0^git1~pre", "1.0^git1", LT)
+                         ("1.0^git1~pre", "1.0^git1", LT),
+
+                         -- local
+                         ("8", "13", LT)
                          ]
 
         forM_ vercmpCases $ \(verA, verB, ord) ->
