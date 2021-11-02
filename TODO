@@ -1,3 +1,4 @@
 - support RPM epochs (ENVR/EVR/EVRA)
   - maybe NVRA could include Maybe Epoch
 - removeDistTag or editRelease and/or eqModDistTag
+- 0.2: NV: prefix NV fields with nv
