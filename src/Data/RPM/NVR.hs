@@ -33,7 +33,7 @@ eitherNVR :: String -> Either String NVR
 eitherNVR s =
   case reverse (splitOn "-" s) of
     rel:ver:emaN ->
-      if any null (rel:ver:emaN)
+      if null rel || null ver || null emaN
       then Left $ "NVR cannot start or end with '-'s: " ++ s
       else Right (NVR (intercalate "-" $ reverse emaN) (VerRel ver rel))
     _ ->

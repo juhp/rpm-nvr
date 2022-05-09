@@ -53,8 +53,8 @@ eitherNVRA s =
   let nvra = dropSuffix ".rpm" $ takeFileName s
   in
     case reverse (splitOn "-" nvra) of
-      ps@(relarch:ver:emaN) ->
-        if any null ps
+      relarch:ver:emaN ->
+        if null relarch || null ver || null emaN
         then Left $ "Bad NVRA string: " ++ s
         else
           case breakOnEnd "." relarch of
